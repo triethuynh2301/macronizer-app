@@ -1,18 +1,18 @@
 from unittest import TestCase
-from macronizer_cores.routes import app, CURRENT_USER
+from config import TestConfig
+from macronizer_cores import create_app, CURRENT_USER
 from macronizer_cores.models import db, User, Log, FoodItem
 from datetime import datetime
 
-# set up test database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///macronizer_test_db'
-app.config['SQLALCHEMY_ECHO'] = False
-# Enable testing mode. Exceptions are propagated rather than handled by the the app’s error handlers
-app.config['TESTING'] = True
-app.config['WTF_CSRF_ENABLED'] = False
 
+# set up test configuration
+app = create_app(TestConfig)
+app_context = app.app_context()
+app_context.push()
+
+# create test db
 db.drop_all()
 db.create_all()
-
 
 class UserModelTestCase(TestCase):
     """Tests for views of API."""
@@ -20,8 +20,10 @@ class UserModelTestCase(TestCase):
     def setUp(self):
       """Make demo data."""
 
+
       TestCase.maxDiff = None
 
+      # seed user data
       u1 = User(
           name="John Doe",
           email="john.doe@gmail.com",

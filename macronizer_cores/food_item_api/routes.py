@@ -1,7 +1,8 @@
+from plistlib import load
 from flask import request, flash, redirect, g, jsonify, Blueprint
-from secret_keys import CALORIE_NINJA_API_KEY
 from macronizer_cores import db
 from macronizer_cores.models import FoodItem
+from config import CALORIES_NINJA_API_KEY
 import requests
 
 
@@ -25,11 +26,10 @@ def search_food_item():
     if not g.user:
         flash("Access unauthorized.", "danger")
         return redirect("/login")
-
     api_url = 'https://api.calorieninjas.com/v1/nutrition?query='
     query_string = request.args.get('queryString')
-    response = requests.get(api_url + query_string, headers={'X-Api-Key': CALORIE_NINJA_API_KEY})
-
+    response = requests.get(api_url + query_string, headers={'X-Api-Key': CALORIES_NINJA_API_KEY})
+    
     if response.status_code == requests.codes.ok:
         # json() returns a JSON object of the result -> return payload data to JSON
         return response.json()

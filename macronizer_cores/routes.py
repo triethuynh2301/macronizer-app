@@ -1,29 +1,14 @@
 from flask import request, redirect, render_template, session, g, jsonify
 from flask.helpers import flash
 from secret_keys import CALORIE_NINJA_API_KEY
-from app import app, db, CURRENT_USER
-from app.models import User, Log, FoodItem
-from app.utils import create_food_log
-from app.forms import LoginForm, RegisterForm
-from sqlalchemy.exc import IntegrityError
+from macronizer_cores import app, db, CURRENT_USER
+from macronizer_cores.models import User, Log, FoodItem
+from macronizer_cores.utils import create_food_log
 from datetime import datetime
 import requests
 
+
 # SECTION routes
-
-# ----------------------------------------------------------------
-# SECTION error handlers
-# ----------------------------------------------------------------
-@app.errorhandler(404)
-def page_not_found(e):
-    '''Handle 404 error'''
-
-    return render_template('404.html'), 404
-
-
-# ----------------------------------------------------------------
-# SECTION Authentication routes
-# ----------------------------------------------------------------
 
 
 @app.before_request
@@ -68,100 +53,6 @@ def show_dashboard():
     return render_template('dashboard.html')
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    '''
-    User login
-    '''
-
-    remove_user_from_session()
-    form = LoginForm()
-
-    # if POST request -> validate data
-    if form.validate_on_submit():
-        # retrieve form data
-        username = form.username.data
-        password = form.password.data
-        user = User.authenticate(username, password)
-
-        # check if authentication succeeds
-        if user:
-            # store user id in session 
-            session[CURRENT_USER] = user.id
-            return redirect("/")
-        else:
-            form.username.errors = ["Invalid username/password."]
-
-    # if GET request or authentication fails-> render login form 
-    return render_template('login.html', form=form)
-
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    '''
-    Register user
-    '''
-
-    remove_user_from_session()
-    form = RegisterForm()
-
-    # if POST request -> validate data
-    if form.validate_on_submit():
-        # retrieve form data
-        name = form.name.data
-        email = form.email.data
-        username = form.username.data
-        password = form.password.data
-
-        # password hashing
-        (username, password) = User.register(username, password)
-
-        # add user to db
-        try:
-            new_user = User(
-                name=name, 
-                email=email, 
-                username=username,
-                password=password
-            )
-            db.session.add(new_user)
-            db.session.commit()
-        except IntegrityError:
-            flash("Username taken.", "warning")
-            return redirect("/register")
-
-        # store current user id in session for authentication/authorization
-        # and redirect to home page
-        session[CURRENT_USER] = new_user.id
-        return redirect("/")
-
-    # if GET request, render register form
-    return render_template('register.html', form=form)
-
-
-def remove_user_from_session():
-    '''
-    if currently logged in -> log out
-    '''
-
-    if CURRENT_USER in session:
-        # remove key from session
-        del session[CURRENT_USER]
-
-
-# best practice to logout with POST request to prevent caching
-@app.route("/logout", methods=["POST"])
-def logout():
-    '''
-    Log user out and redirect back to login page
-    '''
-
-    remove_user_from_session()
-    flash("You have logged out.", "info")
-
-    return redirect("/login")
-
-
 # ----------------------------------------------------------------
 # SECTION Nutrtion routes
 # ----------------------------------------------------------------
@@ -172,6 +63,10 @@ def show_nutrition_page():
     ----------------------------------------------------------------
     - Load nutrition page
     '''
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
 
     return render_template('nutrition.html')
 
@@ -190,6 +85,10 @@ def search_food_item():
     --------------
     List of food items in JSON format
     '''
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
 
     api_url = 'https://api.calorieninjas.com/v1/nutrition?query='
     query_string = request.args.get('queryString')
@@ -220,6 +119,10 @@ def delete_food_item_from_log(food_id):
     Food item deleted in JSON format and status code 204 
     '''
 
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
+
     item_to_delete = FoodItem.query.get_or_404(food_id)
     print(f"******{item_to_delete}********")
 
@@ -233,6 +136,7 @@ def delete_food_item_from_log(food_id):
     except:
         res = {"message": "Server Error"}
         return (res, 500)
+
 
 # ----------------------------------------------------------------
 # SECTION api/log routes
@@ -248,6 +152,10 @@ def search_meals_logged_by_date():
     --------------
     List of meals in JSON format
     '''
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
 
     # convert query string to date
     date_string = request.args.get('date')
@@ -278,6 +186,10 @@ def log_a_meal():
     --------------
     List of food items logged for a particular date and meal in JSON format
     '''
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
     
     # construct a food log object
     food_list = request.json.get("food_items")
@@ -309,6 +221,10 @@ def update_meal_log():
     --------------
     List of food items logged for a particular date and meal in JSON format
     '''
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/login")
 
     # convert query parameter to date
     date_string = request.json.get("date_string")

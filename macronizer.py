@@ -1,2 +1,5 @@
-from app import app
+from macronizer_cores import app
 
+
+if __name__ == '__main__':
+    app.run(debug=True)

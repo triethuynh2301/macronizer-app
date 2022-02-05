@@ -1,5 +1,5 @@
 from sqlalchemy import CheckConstraint
-from app import db, bcrypt
+from macronizer_cores import db, bcrypt
 
 
 # SECTION models

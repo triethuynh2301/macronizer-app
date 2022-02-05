@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.models import Log, FoodItem
+from macronizer_cores.models import Log, FoodItem
 
 def create_food_log(user_id, date_string, meal_no, item_list) -> Log:
     '''

@@ -6,22 +6,36 @@ from config import Config
 
 CURRENT_USER = "user_id"
 
-# create Flask app object
-app = Flask(__name__)
-app.config.from_object(Config)
-
 # instantiate the extension
-debug = DebugToolbarExtension(app)
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+debug = DebugToolbarExtension()
+db = SQLAlchemy()
+bcrypt = Bcrypt()
 
-from macronizer_cores import routes
-from macronizer_cores.errors.routes import errors
-from macronizer_cores.auth.routes import auth
+def create_app(config_class=Config):
+  # create Flask app object
+  app = Flask(__name__)
+  app.config.from_object(Config)
 
-# register blueprint to application object
-app.register_blueprint(errors)
-app.register_blueprint(auth)
+  # register extension
+  debug.init_app(app)
+  db.init_app(app)
+  bcrypt.init_app(app)
+
+  # import blueprints
+  from macronizer_cores.errors.routes import errors
+  from macronizer_cores.auth.routes import auth
+  from macronizer_cores.log_api.routes import log_api
+  from macronizer_cores.food_item_api.routes import food_item_api
+  from macronizer_cores.main.routes import main
+
+  # register blueprints to application object
+  app.register_blueprint(main)
+  app.register_blueprint(errors)
+  app.register_blueprint(auth)
+  app.register_blueprint(log_api)
+  app.register_blueprint(food_item_api)
+
+  return app
 
 
 

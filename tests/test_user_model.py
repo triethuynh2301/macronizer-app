@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from flask import json
 
-from app.routes import app
-from app.models import db, User
+from macronizer_cores.routes import app
+from macronizer_cores.models import db, User
 
 # set up test database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///macronizer_test_db'

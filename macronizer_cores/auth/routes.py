@@ -1,8 +1,10 @@
-from flask import session, render_template, redirect, flash, Blueprint
+from flask import session, render_template, redirect, flash, Blueprint, g
+from macronizer_cores import db, CURRENT_USER
 from macronizer_cores.models import User
 from macronizer_cores.auth.forms import RegisterForm, LoginForm
-from macronizer_cores import db, CURRENT_USER
+from macronizer_cores.auth.utils import remove_user_from_session
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 # create auth blueprint
@@ -10,6 +12,35 @@ auth = Blueprint('auth', __name__)
 
 
 # SECTION routes
+# NOTE - before_app_request is executed before each request, even if outside of a blueprint.
+@auth.before_app_request
+def add_user_to_g():
+    '''
+    If logged in, manage current user session in g variable
+    '''
+
+    if CURRENT_USER in session:
+        g.user = User.query.get(session.get(CURRENT_USER))
+    else:
+        g.user = None
+    g.today = datetime.now().date()
+
+
+# ----------------------------------------------------------------
+# Turn off all caching in Flask
+# @credit to https://stackoverflow.com/questions/34066804/disabling-caching-in-flask
+# ----------------------------------------------------------------
+@auth.after_app_request
+def add_header(req):
+    """Add non-caching headers on every request."""
+
+    req.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    req.headers["Pragma"] = "no-cache"
+    req.headers["Expires"] = "0"
+    req.headers['Cache-Control'] = 'public, max-age=0'
+    return req
+
+
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     '''
@@ -94,11 +125,3 @@ def logout():
     return redirect("/login")
 
 
-def remove_user_from_session():
-    '''
-    if currently logged in -> log out
-    '''
-
-    if CURRENT_USER in session:
-        # remove key from session
-        del session[CURRENT_USER]

@@ -1,6 +1,6 @@
 from unittest import TestCase
-from app.routes import app, CURRENT_USER
-from app.models import db, User, Log, FoodItem
+from macronizer_cores.routes import app, CURRENT_USER
+from macronizer_cores.models import db, User, Log, FoodItem
 from datetime import datetime
 
 # set up test database

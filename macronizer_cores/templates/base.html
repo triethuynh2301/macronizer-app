@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/static/css/site.css">
     <title>{% block TITLE %}{% endblock %}</title>
 </head>
-<body>
+<body class="position-relative">
     <!-- SECTION navbar -->
 
     <!-- SECTION flash message -->
@@ -27,14 +27,24 @@
         {% if messages %}
             <ul class="flashes list-unstyled container">
             {% for category, message in messages %}
-            <div class="alert alert-{{category}} alert-dismissible fade show text-center" role="alert">
-                {{message}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="toast-container position-absolute p-3 end-0">
+                    <div class="toast bg-{{category}}" delay="10000" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <i class="fa-solid fa-circle-info me-1"></i>
+                            <strong class="me-auto text-capitalize">{{category}}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                          {{message}}
+                        </div>
+                      </div>
+                    </div>
+                </div>
             {% endfor %}
             </ul>
             {% endif %}
     {% endwith %}
+
 
 
     {% block CONTENT %}{% endblock %}

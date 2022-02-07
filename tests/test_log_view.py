@@ -1,25 +1,27 @@
+from flask import url_for
 from unittest import TestCase
 from config import TestConfig
+from flask_login import login_user, current_user
 from macronizer_cores import create_app, CURRENT_USER
 from macronizer_cores.models import db, User, Log, FoodItem
 from datetime import datetime
 
 
-# set up test configuration
-app = create_app(TestConfig)
-app_context = app.app_context()
-app_context.push()
-
-# create test db
-db.drop_all()
-db.create_all()
-
 class UserModelTestCase(TestCase):
     """Tests for views of API."""
 
     def setUp(self):
-      """Make demo data."""
+      """Set up test config and seed mock data"""
 
+      # set up test configuration
+      self.app = create_app(TestConfig)
+      self.client = self.app.test_client()
+      self._ctx = self.app.test_request_context()
+      self._ctx.push()
+
+      # create test db
+      db.drop_all()
+      db.create_all()
 
       TestCase.maxDiff = None
 
@@ -31,9 +33,9 @@ class UserModelTestCase(TestCase):
           password="123456789"
       )
       (u1.username, u1.password) = User.register(u1.username, u1.password)
-      self.u1 = u1
       db.session.add(u1)
       db.session.commit()
+      self.u1 = u1
 
       # seed meal data
       l1 = Log(
@@ -42,8 +44,8 @@ class UserModelTestCase(TestCase):
           user_id=u1.id
       )
       db.session.add_all([l1])
-      self.l1 = l1
       db.session.commit()
+      self.l1 = l1
 
       # seed food item data
       i1 = FoodItem(
@@ -61,7 +63,6 @@ class UserModelTestCase(TestCase):
           carbohydrate_gram = 0,
           log_id=l1.id
       )
-
       i2 = FoodItem(
           name="onion",
           sugar_gram = 13.3,
@@ -77,11 +78,10 @@ class UserModelTestCase(TestCase):
           carbohydrate_gram = 28.6,
           log_id=l1.id
       )
-
       db.session.add_all([i1, i2])
+      db.session.commit()
       self.i1 = i1
       self.i2 = i2
-      db.session.commit()
 
 
     def tearDown(self):
@@ -96,64 +96,61 @@ class UserModelTestCase(TestCase):
       Test that the routes returns json data of all meals logged for the given date.
       '''
 
-      # arrange
-      log_id = self.l1.id
-      food_item_1_id = self.i1.id
-      food_item_2_id = self.i2.id
-
       # act
-      with app.test_client() as client:
-        with client.session_transaction() as session:
-          session[CURRENT_USER] = self.u1.id
+      with self.app.test_client() as client:
+        with self._ctx:
+          login_user(self.u1)
+          yield client
 
-      res = client.get("/api/log/search", query_string={'date': '2022-02-01'})
-      data = res.json
+        url = url_for("log_api.search_meals_logged_by_date")
+        res = client.get(url, query_string={'date': '2022-02-01'})
+        data = res.json
 
-      # assert
-      self.assertEqual(res.status_code, 200)
-      self.assertEqual(data, 
-      {
-        "meals_logged": [
-          {
-            "date": "2022-02-01",
-            "food_items": [
-              {
-                "calories": 332.5,
-                "carbohydrate_gram": 0.0,
-                "cholesterol_mg": 171,
-                "fat_saturation_gram": 2.0,
-                "fat_total_gram": 7.1,
-                "fiber_gram": 0.0,
-                "id": food_item_1_id,
-                "name": "chicken breast",
-                "potassium_mg": 453.0,
-                "protein_gram": 61.9,
-                "serving_size_gram": 200.0,
-                "sodium_mg": 145.0,
-                "sugar_gram": 0.0
-              },
-              {
-                "calories": 126.7,
-                "carbohydrate_gram": 28.6,
-                "cholesterol_mg": 0.0,
-                "fat_saturation_gram": 0.1,
-                "fat_total_gram": 0.5,
-                "fiber_gram": 4.0,
-                "id": food_item_2_id,
-                "name": "onion",
-                "potassium_mg": 99.0,
-                "protein_gram": 3.9,
-                "serving_size_gram": 283.495,
-                "sodium_mg": 8.0,
-                "sugar_gram": 13.3
-              }
-            ],
-            "id": log_id,
-            "meal_no": 1,
-            "user_id": self.u1.id
-          }
-        ]
-      })
+        # assert
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data, 
+        {
+          "meals_logged": [
+            {
+              "date": "2022-02-01",
+              "food_items": [
+                {
+                  "calories": 332.5,
+                  "carbohydrate_gram": 0.0,
+                  "cholesterol_mg": 171,
+                  "fat_saturation_gram": 2.0,
+                  "fat_total_gram": 7.1,
+                  "fiber_gram": 0.0,
+                  "id": self.i1.id,
+                  "name": "chicken breast",
+                  "potassium_mg": 453.0,
+                  "protein_gram": 61.9,
+                  "serving_size_gram": 200.0,
+                  "sodium_mg": 145.0,
+                  "sugar_gram": 0.0
+                },
+                {
+                  "calories": 126.7,
+                  "carbohydrate_gram": 28.6,
+                  "cholesterol_mg": 0.0,
+                  "fat_saturation_gram": 0.1,
+                  "fat_total_gram": 0.5,
+                  "fiber_gram": 4.0,
+                  "id": self.i2.id,
+                  "name": "onion",
+                  "potassium_mg": 99.0,
+                  "protein_gram": 3.9,
+                  "serving_size_gram": 283.495,
+                  "sodium_mg": 8.0,
+                  "sugar_gram": 13.3
+                }
+              ],
+              "id": self.l1.id,
+              "meal_no": 1,
+              "user_id": self.u1.id
+            }
+          ]
+        })
       
 
     def test_log_a_new_meal(self) -> None:
@@ -184,9 +181,11 @@ class UserModelTestCase(TestCase):
       }
 
       # act
-      with app.test_client() as client:
-        with client.session_transaction() as session:
-          session[CURRENT_USER] = self.u1.id
+      # log the meal payload to u1
+      with self.app.test_client() as client:
+        with self._ctx:
+          login_user(self.u1)
+          yield client
         
         res = client.post("/api/log/new", json=payload)
         data = res.json
@@ -236,9 +235,10 @@ class UserModelTestCase(TestCase):
       }
 
       # act
-      with app.test_client() as client:
-        with client.session_transaction() as session:
-          session[CURRENT_USER] = self.u1.id
+      with self.app.test_client() as client:
+        with self._ctx:
+          login_user(self.u1)
+          yield client
         
       res = client.patch('/api/log/update', json=payload)
       data = res.json
@@ -268,6 +268,6 @@ class UserModelTestCase(TestCase):
             }
           ],
           "meal_no": 2,
-          "user_id": 1
+          "user_id": self.u1.id
         }
       })

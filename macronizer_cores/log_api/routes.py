@@ -1,4 +1,5 @@
-from flask import Blueprint, flash, redirect, g, jsonify, request
+from flask import Blueprint, jsonify, request
+from flask_login import login_required, current_user
 from macronizer_cores import db
 from macronizer_cores.models import Log, FoodItem
 from macronizer_cores.log_api.utils import create_food_log 
@@ -11,6 +12,7 @@ log_api = Blueprint('log_api', __name__)
 
 # SECTION - routes
 @log_api.route("/api/log/search")
+@login_required
 def search_meals_logged_by_date():
     '''
     GET /api/log/search
@@ -22,19 +24,16 @@ def search_meals_logged_by_date():
     List of meals in JSON format
     '''
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/login")
-
     # convert query string to date
     date_string = request.args.get('date')
     search_date = datetime.strptime(date_string, '%Y-%m-%d').date()
+    user_id = request.args.get('user_id')
 
     # search for meals logged
     meals = Log.query\
                 .filter(
                     Log.date == search_date,
-                    Log.user_id == g.user.id)\
+                    Log.user_id == current_user.id)\
                 .all()
 
     # serialize data
@@ -45,6 +44,7 @@ def search_meals_logged_by_date():
 
 
 @log_api.route("/api/log/new", methods=["POST"])
+@login_required
 def log_a_meal():
     '''
     POST /api/log/new
@@ -55,16 +55,12 @@ def log_a_meal():
     --------------
     List of food items logged for a particular date and meal in JSON format
     '''
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/login")
     
     # construct a food log object
     food_list = request.json.get("food_items")
     meal_no = request.json.get("meal_no")
     date_string = request.json.get("date_string")
-    new_log = create_food_log(g.user.id, date_string, meal_no, food_list)
+    new_log = create_food_log(current_user.id, date_string, meal_no, food_list)
     
     try:
         db.session.add(new_log)
@@ -79,6 +75,7 @@ def log_a_meal():
 
 
 @log_api.route("/api/log/update", methods=["PATCH"])
+@login_required
 def update_meal_log():
     '''
     PATCH /api/log/update
@@ -89,10 +86,6 @@ def update_meal_log():
     --------------
     List of food items logged for a particular date and meal in JSON format
     '''
-
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/login")
 
     # convert query parameter to date
     date_string = request.json.get("date_string")
@@ -106,7 +99,7 @@ def update_meal_log():
         .filter_by(
             meal_no=meal_no,
             date=logged_date,
-            user_id=g.user.id)\
+            user_id=current_user.id)\
         .first()
     
     # get the food item 
@@ -118,7 +111,7 @@ def update_meal_log():
             updated_log = Log(
                 meal_no=meal_no,
                 date=logged_date,
-                user_id=g.user.id,
+                user_id=current_user.id,
                 food_items=[updated_item]
             )
             db.session.add(updated_log)

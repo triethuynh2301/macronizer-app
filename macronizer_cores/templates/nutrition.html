@@ -2,176 +2,175 @@
 {% block TITLE %}Nutrition{% endblock %}
 
 {% block MAIN %}
-<main id="main" class="main">
+    <main id="main" class="main">
 
-    <!-- SECTION page title -->
-    <div class="pagetitle">
-        <h1>Nutrition</h1>
-        <nav>
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active">Nutrition</li>
-        </ol>
-        </nav>
-    </div>
-    <!-- End Page Title -->
-
-    <section class="nutrition">
-        <!-- SECTION date picker -->
-        <div class="col-lg-3 col-md-6">
-            <div class="input-group mb-4">
-                <i class="bi bi-calendar-date input-group-text"></i>
-                <input type="text" class="datepicker_input form-control" required value="{{g.today.strftime('%m/%d/%Y')}}">
-            </div>
+        <!-- SECTION page title -->
+        <div class="pagetitle">
+            <h1>Nutrition</h1>
+            <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Nutrition</li>
+            </ol>
+            </nav>
         </div>
-        <!-- end datepicker -->
-    
+        <!-- End Page Title -->
+
+        <section class="nutrition">
+            <!-- SECTION date picker -->
+            <div class="col-lg-3 col-md-6">
+                <div class="input-group mb-4">
+                    <i class="bi bi-calendar-date input-group-text"></i>
+                    <input type="text" class="datepicker_input form-control" required value="{{g.today.strftime('%m/%d/%Y')}}">
+                </div>
+            </div>
+            <!-- end datepicker -->
         
-        <!-- SECTION food log -->
-        <ul class="food-log list-unstyled">
-            <li class="meal">
-                <h3 class="fw-bold">
-                    Meal #1
-                    <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
-                </h3>
-                <!-- SECTION food items log -->
-                <ul class="list-unstyled food-list" data-meal-no="1">
-                </ul>
-                <!-- end food item log -->
-            </li>
-            <li class="meal">
-                <h3 class="fw-bold">
-                    Meal #2
-                    <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
-                </h3>
-                <!-- SECTION food items log -->
-                <ul class="list-unstyled food-list" data-meal-no="2">
-                </ul>
-                <!-- end food item log -->
-            </li>
-            <li class="meal">
-                <h3 class="fw-bold">
-                    Meal #3
-                    <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
-                </h3>
-                <!-- SECTION food items log -->
-                <ul class="list-unstyled food-list" data-meal-no="3">
-                </ul>
-                <!-- end food item log -->
-            </li>
-            <li class="meal">
-                <h3 class="fw-bold">
-                    Meal #4
-                    <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
-                </h3>
-                <!-- SECTION food items log -->
-                <ul class="list-unstyled food-list" data-meal-no="4">
-                </ul>
-                <!-- end food item log -->
-            </li>
-            <li class="meal">
-                <h3 class="fw-bold">
-                    Meal #5
-                    <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
-                </h3>
-                <!-- SECTION food items log -->
-                <ul class="list-unstyled food-list" data-meal-no="5">
-                </ul>
-                <!-- end food item log -->
-            </li>
-        </ul>
+            
+            <!-- SECTION food log -->
+            <ul class="food-log list-unstyled">
+                <li class="meal">
+                    <h3 class="fw-bold">
+                        Meal #1
+                        <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
+                    </h3>
+                    <!-- SECTION food items log -->
+                    <ul class="list-unstyled food-list" data-meal-no="1">
+                    </ul>
+                    <!-- end food item log -->
+                </li>
+                <li class="meal">
+                    <h3 class="fw-bold">
+                        Meal #2
+                        <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
+                    </h3>
+                    <!-- SECTION food items log -->
+                    <ul class="list-unstyled food-list" data-meal-no="2">
+                    </ul>
+                    <!-- end food item log -->
+                </li>
+                <li class="meal">
+                    <h3 class="fw-bold">
+                        Meal #3
+                        <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
+                    </h3>
+                    <!-- SECTION food items log -->
+                    <ul class="list-unstyled food-list" data-meal-no="3">
+                    </ul>
+                    <!-- end food item log -->
+                </li>
+                <li class="meal">
+                    <h3 class="fw-bold">
+                        Meal #4
+                        <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
+                    </h3>
+                    <!-- SECTION food items log -->
+                    <ul class="list-unstyled food-list" data-meal-no="4">
+                    </ul>
+                    <!-- end food item log -->
+                </li>
+                <li class="meal">
+                    <h3 class="fw-bold">
+                        Meal #5
+                        <i class="bi bi-plus-circle-fill text-primary" type="button" data-bs-toggle="modal" data-bs-target="#searchFoodModal"></i>
+                    </h3>
+                    <!-- SECTION food items log -->
+                    <ul class="list-unstyled food-list" data-meal-no="5">
+                    </ul>
+                    <!-- end food item log -->
+                </li>
+            </ul>
 
-        <!-- SECTION search food modal -->
-        <div class="modal fade" id="searchFoodModal" tabindex="-1" aria-labelledby="searchFoodLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="searchFoodLabel"></h5>
-                    </div>
-                    <div class="modal-body">
-                        <!-- SECTION search bar -->
-                        <div class="search-bar mb-5">
-                            <form class="search-form d-flex align-items-center">
-                                <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                                <button type="submit" title="Search" id="searchFoodBtn">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </form>
+            <!-- SECTION search food modal -->
+            <div class="modal fade" id="searchFoodModal" tabindex="-1" aria-labelledby="searchFoodLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="searchFoodLabel"></h5>
                         </div>
-                        <!-- End Search Bar -->
-
-                        <!-- SECTION search table results -->
-                        <table class="table table-responsive align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Serving</th>
-                                    <th>Protein</th>
-                                    <th>Fat</th>
-                                    <th>Carbohydrate</th>
-                                    <th>Calories</th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="food-item-table">
-                            </tbody>
-
-                            <!-- SECTION loading spinner -->
-                            <div class="text-center mb-2 text-info d-none" id="loading-icon">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
+                        <div class="modal-body">
+                            <!-- SECTION search bar -->
+                            <div class="search-bar mb-5">
+                                <form class="search-form d-flex align-items-center">
+                                    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                                    <button type="submit" title="Search" id="searchFoodBtn">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </form>
                             </div>
-                            <!-- End loading spinner -->
-                            
-                            <!-- TODO - add toggle for item -->
-                            <!-- <p class="text-danger text-center fw-bold fs-6 visually-hidden" id="searchNotFoundWarning">
-                                <i class="fa-solid fa-magnifying-glass-minus"></i>
-                                No search results found
-                            </p> -->
+                            <!-- End Search Bar -->
 
-                            <!-- End food results table -->
-                            <tfoot class="table-light">
-                                <tr>
-                                    <td class="fw-bold fst-italic text-primary">Total</td>
-                                    <td>N/A</td>
-                                    <td class="total-protein fw-bold fst-italic text-primary">0g</td>
-                                    <td class="total-fat fw-bold fst-italic text-primary">0g</td>
-                                    <td class="total-carb fw-bold fst-italic text-primary">0g</td>
-                                    <td class="total-calories fw-bold fst-italic text-primary">0 cals</td>
-                                </tr>
+                            <!-- SECTION search table results -->
+                            <table class="table table-responsive align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Serving</th>
+                                        <th>Protein</th>
+                                        <th>Fat</th>
+                                        <th>Carbohydrate</th>
+                                        <th>Calories</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="food-item-table">
+                                </tbody>
+
+                                <!-- SECTION loading spinner -->
+                                <div class="text-center mb-2 text-info d-none" id="loading-icon">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                                <!-- End loading spinner -->
                                 
-                            </tfoot>
-                        </table>
-                        <!-- End search table results -->
+                                <!-- TODO - add toggle for item -->
+                                <!-- <p class="text-danger text-center fw-bold fs-6 visually-hidden" id="searchNotFoundWarning">
+                                    <i class="fa-solid fa-magnifying-glass-minus"></i>
+                                    No search results found
+                                </p> -->
 
-                        <!-- SECTION meal select -->
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected value="1">Meal #1</option>
-                            <option value="2">Meal #2</option>
-                            <option value="3">Meal #3</option>
-                            <option value="4">Meal #4</option>
-                            <option value="5">Meal #5</option>
-                        </select>
-                        <!-- End meal select -->
+                                <!-- End food results table -->
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td class="fw-bold fst-italic text-primary">Total</td>
+                                        <td>N/A</td>
+                                        <td class="total-protein fw-bold fst-italic text-primary">0g</td>
+                                        <td class="total-fat fw-bold fst-italic text-primary">0g</td>
+                                        <td class="total-carb fw-bold fst-italic text-primary">0g</td>
+                                        <td class="total-calories fw-bold fst-italic text-primary">0 cals</td>
+                                    </tr>
+                                    
+                                </tfoot>
+                            </table>
+                            <!-- End search table results -->
 
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="logFoodBtn">
-                        Log Food 
-                        <i class="fa-solid fa-arrow-right-from-bracket ps-1"></i>
-                    </button>
+                            <!-- SECTION meal select -->
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected value="1">Meal #1</option>
+                                <option value="2">Meal #2</option>
+                                <option value="3">Meal #3</option>
+                                <option value="4">Meal #4</option>
+                                <option value="5">Meal #5</option>
+                            </select>
+                            <!-- End meal select -->
+
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="logFoodBtn">
+                            Log Food 
+                            <i class="fa-solid fa-arrow-right-from-bracket ps-1"></i>
+                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- end search food modal -->
+            <!-- end search food modal -->
 
-    </section>
+        </section>
 
-</main><!-- End #main -->
-
+    </main><!-- End #main -->
 {% endblock %}
 
 {% block CUSTOM_JS %}

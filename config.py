@@ -38,5 +38,7 @@ class TestConfig(Config):
   # Enable testing mode. Exceptions are propagated rather than handled by the the app’s error handlers
   DEBUG = False
   TESTING = True
+  # disable @login_required 
+  LOGIN_DISABLED = True
   SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DB_URL')
   WTF_CSRF_ENABLED = False

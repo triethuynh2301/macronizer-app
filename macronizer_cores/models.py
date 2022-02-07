@@ -1,9 +1,10 @@
 from sqlalchemy import CheckConstraint
-from macronizer_cores import db, bcrypt
+from flask_login import UserMixin
+from macronizer_cores import db,bcrypt, login
 
 
 # SECTION models
-class User(db.Model):
+class User(UserMixin, db.Model):
     '''
     Model for User
     '''
@@ -94,6 +95,10 @@ class User(db.Model):
             "username": self.username,
         }
 
+
+@login.user_loader
+def load_user(user_id) -> User:
+    return User.query.get(int(user_id))
 
 class Log(db.Model):
     '''

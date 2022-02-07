@@ -1,5 +1,5 @@
-from plistlib import load
-from flask import request, flash, redirect, g, jsonify, Blueprint
+from flask import request, jsonify, Blueprint
+from flask_login import login_required
 from macronizer_cores import db
 from macronizer_cores.models import FoodItem
 from config import CALORIES_NINJA_API_KEY
@@ -12,6 +12,7 @@ food_item_api = Blueprint('food_item_api', __name__)
 
 # SECTION - routes
 @food_item_api.route("/api/food/search")
+@login_required
 def search_food_item():
     '''
     GET /api/food/search/<string:query_string>
@@ -23,9 +24,6 @@ def search_food_item():
     List of food items in JSON format
     '''
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/login")
     api_url = 'https://api.calorieninjas.com/v1/nutrition?query='
     query_string = request.args.get('queryString')
     response = requests.get(api_url + query_string, headers={'X-Api-Key': CALORIES_NINJA_API_KEY})
@@ -39,6 +37,7 @@ def search_food_item():
 
 
 @food_item_api.route("/api/food/delete/<int:food_id>", methods=["DELETE"])
+@login_required
 def delete_food_item_from_log(food_id):
     '''
     DELETE /api/food/delete/<int:food_id>
@@ -55,13 +54,7 @@ def delete_food_item_from_log(food_id):
     Food item deleted in JSON format and status code 204 
     '''
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect("/login")
-
     item_to_delete = FoodItem.query.get_or_404(food_id)
-    print(f"******{item_to_delete}********")
-
     try:
         db.session.delete(item_to_delete)
         db.session.commit()

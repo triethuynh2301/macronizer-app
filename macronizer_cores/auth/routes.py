@@ -1,8 +1,8 @@
-from flask import session, render_template, redirect, flash, Blueprint, g
-from macronizer_cores import db, CURRENT_USER
+from flask import render_template, redirect, flash, Blueprint, g, url_for
+from flask_login import current_user, login_user, logout_user
+from macronizer_cores import db
 from macronizer_cores.models import User
 from macronizer_cores.auth.forms import RegisterForm, LoginForm
-from macronizer_cores.auth.utils import remove_user_from_session
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 
@@ -16,13 +16,9 @@ auth = Blueprint('auth', __name__)
 @auth.before_app_request
 def add_user_to_g():
     '''
-    If logged in, manage current user session in g variable
+    Store today date in g variable
     '''
 
-    if CURRENT_USER in session:
-        g.user = User.query.get(session.get(CURRENT_USER))
-    else:
-        g.user = None
     g.today = datetime.now().date()
 
 
@@ -47,7 +43,11 @@ def login():
     User login
     '''
 
-    remove_user_from_session()
+    # logout user first before logging another account
+    if current_user.is_authenticated:
+        flash("Please logout first before logging in another account.", "warning")
+        return redirect(url_for('main.show_dashboard'))
+
     form = LoginForm()
 
     # if POST request -> validate data
@@ -60,7 +60,7 @@ def login():
         # check if authentication succeeds
         if user:
             # store user id in session 
-            session[CURRENT_USER] = user.id
+            login_user(user)
             return redirect("/")
         else:
             form.username.errors = ["Invalid username/password."]
@@ -75,7 +75,11 @@ def register():
     Register user
     '''
 
-    remove_user_from_session()
+    # logout user first before registering another account
+    if current_user.is_authenticated:
+        flash("Please logout first before registering another account.", "warning")
+        return redirect(url_for('main.show_dashboard'))
+
     form = RegisterForm()
 
     # if POST request -> validate data
@@ -101,11 +105,9 @@ def register():
             db.session.commit()
         except IntegrityError:
             flash("Username taken.", "warning")
-            return redirect("/register")
+            return redirect(url_for('auth.register'))
 
-        # store current user id in session for authentication/authorization
-        # and redirect to home page
-        session[CURRENT_USER] = new_user.id
+        login_user(new_user)
         return redirect("/")
 
     # if GET request, render register form
@@ -119,9 +121,9 @@ def logout():
     Log user out and redirect back to login page
     '''
 
-    remove_user_from_session()
+    logout_user()
     flash("You have logged out.", "info")
 
-    return redirect("/login")
+    return redirect(url_for("auth.login"))
 
 

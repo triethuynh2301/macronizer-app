@@ -9,7 +9,7 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 
 # API key
-CALORIES_NINJA_API_KEY = os.getenv('CALORIE_NINJA_API_KEY')
+CALORIES_NINJA_API_KEY = os.getenv('CALORIES_NINJA_API_KEY')
 
 
 # SECTION - config classes

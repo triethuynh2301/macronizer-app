@@ -27,7 +27,6 @@ def search_meals_logged_by_date():
     # convert query string to date
     date_string = request.args.get('date')
     search_date = datetime.strptime(date_string, '%Y-%m-%d').date()
-    user_id = request.args.get('user_id')
 
     # search for meals logged
     meals = Log.query\

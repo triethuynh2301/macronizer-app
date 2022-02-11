@@ -1,5 +1,8 @@
 const API_LOG_URL = "http://localhost:5000/api/log";
 const API_FOOD_ITEM_URL = "http://localhost:5000/api/food";
+// NOTE - used in production
+// const API_LOG_URL = "https://macronizer-app.herokuapp.com/api/log";
+// const API_FOOD_ITEM_URL = "https://macronizer-app.herokuapp.com/api/food";
 
 /**
  * Meals logged model

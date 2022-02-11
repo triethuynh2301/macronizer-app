@@ -1,3 +1,4 @@
+from distutils.debug import DEBUG
 import os
 from dotenv import load_dotenv
 
@@ -17,6 +18,7 @@ class Config(object):
   Config parent class
   '''
 
+  DEBUG = False
   SECRET_KEY = os.getenv('SECRET_KEY')
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   SQLALCHEMY_ECHO = False

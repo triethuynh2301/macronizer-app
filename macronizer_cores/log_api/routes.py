@@ -9,7 +9,6 @@ from datetime import datetime
 # create blueprint
 log_api = Blueprint('log_api', __name__)
 
-
 # SECTION - routes
 @log_api.route("/api/log/search")
 @login_required

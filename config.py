@@ -31,7 +31,10 @@ class DevelopmentConfig(Config):
   # Flask debugtoolbar config
   DEBUG_TB_INTERCEPT_REDIRECTS = False
   # Flask SQLAchelmy config
-  SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DB_URL')
+  uri = os.getenv("DATABASE_URL") 
+  if uri and uri.startswith("postgres://"):
+      uri = uri.replace("postgres://", "postgresql://", 1)
+  SQLALCHEMY_DATABASE_URI = uri
 
 
 class TestConfig(Config):

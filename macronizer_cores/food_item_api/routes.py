@@ -34,6 +34,8 @@ def search_food_item():
     else:
         # TODO - add error handling
         print("Error:", response.status_code, response.text)
+        res = jsonify({"message": "Request failed"})
+        return res 
 
 
 @food_item_api.route("/api/food/delete/<int:food_id>", methods=["DELETE"])

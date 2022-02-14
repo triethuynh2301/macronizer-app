@@ -1,5 +1,4 @@
 from flask import render_template, Blueprint
-from flask.helpers import flash
 from flask_login import login_required
 
 
@@ -15,10 +14,10 @@ def show_dashboard():
     Render home page
     '''
 
-    return render_template('dashboard.html')
+    return render_template('content/dashboard.html')
 
 
-@main.route("/nutrition/")
+@main.route("/nutrition")
 @login_required
 def show_nutrition_page():
     '''
@@ -27,4 +26,15 @@ def show_nutrition_page():
     - Load nutrition page
     '''
 
-    return render_template('nutrition.html')
+    return render_template('content/nutrition.html')
+
+@main.route('/profile')
+@login_required
+def show_user_profile():
+    '''
+    GET /profile
+    ----------------------------------------------------------------
+    - Load user profile page
+    '''
+
+    return render_template('content/profile.html')

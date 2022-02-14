@@ -3,6 +3,7 @@ from flask_login import login_required
 from macronizer_cores import db
 from macronizer_cores.models import FoodItem
 from config import CALORIES_NINJA_API_KEY
+
 import requests
 
 

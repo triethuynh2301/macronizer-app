@@ -35,6 +35,7 @@ def register_blueprint(app):
     from macronizer_cores.auth.routes import auth
     from macronizer_cores.log_api.routes import log_api
     from macronizer_cores.food_item_api.routes import food_item_api
+    from macronizer_cores.user_api.routes import user_api
     from macronizer_cores.main.routes import main
 
   # register blueprints to application object
@@ -43,6 +44,7 @@ def register_blueprint(app):
     app.register_blueprint(auth)
     app.register_blueprint(log_api)
     app.register_blueprint(food_item_api)
+    app.register_blueprint(user_api)
 
 
 def register_extension(app):

@@ -1,8 +1,58 @@
-// const API_LOG_URL = "http://localhost:5000/api/log";
-// const API_FOOD_ITEM_URL = "http://localhost:5000/api/food";
+const API_LOG_URL = "http://localhost:5000/api/log";
+const API_FOOD_ITEM_URL = "http://localhost:5000/api/food";
+const API_USER_URL = "http://localhost:5000/api/user";
 // NOTE - used in production
-const API_LOG_URL = "https://macronizer-app.herokuapp.com/api/log";
-const API_FOOD_ITEM_URL = "https://macronizer-app.herokuapp.com/api/food";
+// const API_LOG_URL = "https://macronizer-app.herokuapp.com/api/log";
+// const API_FOOD_ITEM_URL = "https://macronizer-app.herokuapp.com/api/food";
+// const API_USER_URL = "https://macronizer-app.herokuapp.com/api/user";
+
+/**************
+ * USER MODEL *
+ **************/
+class User {
+  constructor(name, username, email, password) {
+    this.name = name;
+    this.username = username;
+    this.email;
+    this.password = password;
+  }
+
+  async handleProfileChanges(e) {
+    e.preventDefault();
+
+    // extract page data
+    const name = document.getElementById("fullName").value;
+    const username = document.getElementById("userName").value;
+    const email = document.getElementById("email").value;
+
+    // api call
+    await User.editProfile(name, username, email);
+
+    // update UI
+    // window.location.reload();
+  }
+
+  /*************************
+   * @PARAM {STRING} NAME  *
+   * @PARAM {STRING} EMAIL *
+   *************************/
+  static async editProfile(name, username, email) {
+    try {
+      const endpoint = `${API_USER_URL}/edit`;
+      const payload = {
+        name: name,
+        email: email,
+        username: username,
+      };
+      const res = await axios.put(endpoint, payload);
+      const { user } = res.data;
+
+      return new User(user.name, user.username, user.email);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
 
 /**
  * Meals logged model

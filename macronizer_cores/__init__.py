@@ -6,9 +6,6 @@ from flask_login import LoginManager
 from config import DevelopmentConfig
 
 
-# CURRENT_USER = "user_id"
-
-
 # instantiate the extension
 debug = DebugToolbarExtension()
 db = SQLAlchemy()

@@ -26,10 +26,14 @@ class User {
     const email = document.getElementById("email").value;
 
     // api call
-    await User.editProfile(name, username, email);
-
-    // update UI
-    // window.location.reload();
+    User.editProfile(name, username, email)
+      .then(() => {
+        // update UI
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   /*************************

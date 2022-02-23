@@ -8,8 +8,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 
-# API key
+# API key and env variables
 CALORIES_NINJA_API_KEY = os.getenv('CALORIES_NINJA_API_KEY')
+FLASK_ENV = os.getenv('FLASK_ENV')
 
 
 # SECTION - config classes
@@ -23,6 +24,21 @@ class Config(object):
   SQLALCHEMY_ECHO = False
 
 
+class ProductionConfig(Config):
+  '''
+  Config for production
+  '''
+
+  DEBUG = False
+  # db config
+  uri = os.getenv("DATABASE_URL") 
+  if uri and uri.startswith("postgres://"):
+      uri = uri.replace("postgres://", "postgresql://", 1)
+  SQL_DATABASE_URI = uri
+
+  
+
+
 class DevelopmentConfig(Config):
   '''
   Config for developement (inherited from super class Config)
@@ -31,16 +47,15 @@ class DevelopmentConfig(Config):
   DEBUG = True
   # Flask debugtoolbar config
   DEBUG_TB_INTERCEPT_REDIRECTS = False
-  # Flask SQLAchelmy config
-  uri = os.getenv("DATABASE_URL") 
-  if uri and uri.startswith("postgres://"):
-      uri = uri.replace("postgres://", "postgresql://", 1)
-  else:
-    uri = os.getenv("DEV_DB_URL")
-  SQLALCHEMY_DATABASE_URI = uri
+  # db config
+  SQLALCHEMY_DATABASE_URI = os.getenv("DEV_DB_URL")
 
 
 class TestConfig(Config):
+  '''
+  Config to run unit and integration test
+  '''
+
   # Enable testing mode. Exceptions are propagated rather than handled by the the app’s error handlers
   DEBUG = False
   TESTING = True

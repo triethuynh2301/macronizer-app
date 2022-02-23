@@ -14,7 +14,7 @@ auth = Blueprint('auth', __name__)
 # SECTION routes
 # NOTE - before_app_request is executed before each request, even if outside of a blueprint.
 @auth.before_app_request
-def add_user_to_g():
+def add_current_date_to_g():
     '''
     Store today date in g variable
     '''

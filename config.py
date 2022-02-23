@@ -34,7 +34,7 @@ class ProductionConfig(Config):
   uri = os.getenv("DATABASE_URL") 
   if uri and uri.startswith("postgres://"):
       uri = uri.replace("postgres://", "postgresql://", 1)
-  SQL_DATABASE_URI = uri
+  SQLALCHEMY_DATABASE_URI = uri
 
   
 

@@ -1,10 +1,18 @@
-// const API_LOG_URL = "http://localhost:5000/api/log";
-// const API_FOOD_ITEM_URL = "http://localhost:5000/api/food";
-// const API_USER_URL = "http://localhost:5000/api/user";
-// NOTE - used in production
-const API_LOG_URL = "https://macronizer-app.herokuapp.com/api/log";
-const API_FOOD_ITEM_URL = "https://macronizer-app.herokuapp.com/api/food";
-const API_USER_URL = "https://macronizer-app.herokuapp.com/api/user";
+let API_LOG_URL;
+let API_FOOD_ITEM_URL;
+let API_USER_URL;
+
+// dev
+if (location.hostname === "localhost") {
+  API_LOG_URL = "http://localhost:5000/api/log";
+  API_FOOD_ITEM_URL = "http://localhost:5000/api/food";
+  API_USER_URL = "http://localhost:5000/api/user";
+} else {
+  // production
+  API_LOG_URL = "https://macronizer-app.herokuapp.com/api/log";
+  API_FOOD_ITEM_URL = "https://macronizer-app.herokuapp.com/api/food";
+  API_USER_URL = "https://macronizer-app.herokuapp.com/api/user";
+}
 
 /**************
  * USER MODEL *

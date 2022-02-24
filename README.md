@@ -1,6 +1,6 @@
 <h1 align="center">Macronizer</h1>
 <p align="center">An exciting and minimalistic food diary and macro tracking app!</p>
-<p align="center"><a href="macronizer-app.herokuapp.com">Project Demo</a></p>
+<p align="center"><a href="https://macronizer-app.herokuapp.com">Project Demo</a></p>
 
 ## About the Project
 
@@ -47,16 +47,18 @@ All food diary can also be reviewed by selecting the date of entry.
 5. In step 4, the DEV_DB_URL and TEST_DB_URL is not yet created. So, we need to create a development db and test db (for testing purposes only).
 
    ```
+   <!-- Connect to PostgresSQL under your username -->
    psql -U <YOUR_USERNAME>
 
+   <!-- Create db for development -->
    user=# CREATE DATABASE macronizer_db;
-   CREATE DATABASE
 
+   <!-- Create db to run unit and integration tests-->
    user=# CREATE DATABASE macronizer_test_db
-   CREATE DATABASE
    ```
+6. Now that we have the databases, you can run the `seed.py` file to create the tables.
 
-6. In the root directory, type `flask run` to run the app in development mode then open `localhost:5000` on browser to demo the app.
+7. In the root directory, type `flask run` to run the app in development mode then open `localhost:5000` on browser to demo the app.
 
 ## Usage
 
@@ -72,11 +74,11 @@ Distributed under the MIT license. See `LICENSE.txt` for more information.
 
 ## Acknowledgments
 
-:star: [Bootstrap 5](https://getbootstrap.com/)
-:star: [Bootstrap Themes and Templates](https://bootstrapmade.com/)
-:star: [Font Awesome](https://fontawesome.com/)
-:star: [Vanilla JS DatePicker Component](https://mymth.github.io/vanillajs-datepicker/#/)
-:star: [CalorieNinjas API](https://calorieninjas.com/)
+:star: [Bootstrap 5](https://getbootstrap.com/) <br>
+:star: [Bootstrap Themes and Templates](https://bootstrapmade.com/) <br>
+:star: [Font Awesome](https://fontawesome.com/) <br>
+:star: [Vanilla JS DatePicker Component](https://mymth.github.io/vanillajs-datepicker/#/) <br>
+:star: [CalorieNinjas API](https://calorieninjas.com/) <br>
 
 ## Contact
 
